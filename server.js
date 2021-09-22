@@ -37,15 +37,22 @@ app.get("/weather", (req, res) => {
   const lat = q.lat;
   const lon = q.lon;
   const searchQuery = q.searchquery;
+  const dayData = [];
 
   let current = haveWeatherData(searchQuery);
+
   if (current) {
-    res.send('city name is ' + current.city_name)
+
+    for (let day of current.data){
+      dayData.push(new Forcast(day.datetime, day.weather.description));
+    }
+
+    res.send(dayData)
+
   } else {
     res.send('Sorry, no data')
   }
 
-  res.send(lat + lon + searchQuery);
 });
 
 
