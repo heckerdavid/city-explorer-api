@@ -4,6 +4,9 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT;
 const weather = require("./data/weather.json");
+const cors = require("cors");
+
+app.use(cors());
 
 class Forcast {
   constructor(date, description) {
