@@ -9,8 +9,7 @@ const movieFunctions = require('./movies');
 
 app.use(cors());
 
-let handleError = (req, res) =>
-  res.status(500).send("Sorry, Something went wrong.");
+let handleError = (req, res) => res.status(500).send("Sorry, Something went wrong.");
 
 
 app.get('/', (req, res) => {

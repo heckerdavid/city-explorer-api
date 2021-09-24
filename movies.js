@@ -13,7 +13,6 @@ class Movie {
 }
 
 
-
 let getMovies = async (req, res) => {
   const q = req.query;
   const searchQuery = q.searchQuery;
@@ -23,7 +22,7 @@ let getMovies = async (req, res) => {
   const movieResponse = await axios.get(movieURL);
 
   let movieData = movieResponse.data;
-  console.log(movieData);
+
   if (movieData.results[1]) {
     const moviesArray = [];
 
