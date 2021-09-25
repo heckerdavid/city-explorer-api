@@ -5,6 +5,24 @@ const cache = require("./cache.js");
 const axios = require("axios");
 
 
+class Weather {
+  constructor(day) {
+    this.description = day.weather.description;
+    this.date = day.datetime;
+  }
+}
+
+
+function weatherHandler(request, response) {
+  const lat = request.query.lat;
+  const lon = request.query.lon;
+  getWeather(lat, lon)
+    .then((summaries) => response.send(summaries))
+    .catch((error) => {
+      console.error(error);
+      response.status(200).send("Sorry. Something went wrong!");
+    });
+}
 
 function getWeather(latitude, longitude) {
   const key = "weather-" + latitude + longitude;
@@ -14,17 +32,15 @@ function getWeather(latitude, longitude) {
     console.log("Cache hit");
   } else {
     console.log("Cache miss");
-    console.log(url);
     cache[key] = {};
     cache[key].timestamp = Date.now();
-    const movieResponse = axios.get(url)
-    cache[key].data = movieResponse
-    .then((response) => {console.log('response is ' + response)
-    return parseWeather(response.data);
-  })
-}
+    const movieResponse = axios.get(url);
+    cache[key].data = movieResponse.then((response) => {
+      return parseWeather(response.data);
+    });
+  }
 
-return cache[key].data;
+  return cache[key].data;
 }
 
 function parseWeather(weatherData) {
@@ -38,11 +54,4 @@ function parseWeather(weatherData) {
   }
 }
 
-class Weather {
-  constructor(day) {
-    this.description = day.weather.description;
-    this.date = day.datetime;
-  }
-}
-
-module.exports = getWeather;
+module.exports = weatherHandler;
