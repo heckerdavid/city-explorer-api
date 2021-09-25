@@ -3,23 +3,40 @@ require("dotenv").config();
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT;
-const cors = require("cors");
+const cors = require('cors');
 const weatherFunctions = require('./weather.js');
 const movieFunctions = require('./movies');
+const weatherstarter = require('./weatherstarter');
 
 app.use(cors());
 
 let handleError = (req, res) => res.status(500).send("Sorry, Something went wrong.");
+
+// from starter
+app.get("/weather", weatherHandler);
+
+function weatherHandler(request, response) {
+  const lat = request.query.lat;
+  const lon = request.query.lon;
+  weatherstarter(lat, lon)
+    .then((summaries) => response.send(summaries))
+    .catch((error) => {
+      console.error(error);
+      response.status(200).send("Sorry. Something went wrong!");
+    });
+}  
+// end starter
+
+
 
 
 app.get('/', (req, res) => {
   res.status(200).send('hello world')
 });
 
-
 app.get('/movies', movieFunctions.getMovies)
 
-app.get("/weather", weatherFunctions.getWeather);
+// app.get("/weather", weatherFunctions.getWeather);
 
 app.get('*', handleError)
 
