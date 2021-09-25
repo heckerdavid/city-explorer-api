@@ -5,7 +5,6 @@ const cache = require("./cache.js");
 const axios = require("axios");
 
 
-module.exports = getWeather;
 
 function getWeather(latitude, longitude) {
   const key = "weather-" + latitude + longitude;
@@ -18,12 +17,14 @@ function getWeather(latitude, longitude) {
     console.log(url);
     cache[key] = {};
     cache[key].timestamp = Date.now();
-    cache[key].data = axios.get(url).then((response) => {console.log('response is ' + response)
+    const movieResponse = axios.get(url)
+    cache[key].data = movieResponse
+    .then((response) => {console.log('response is ' + response)
     return parseWeather(response.data);
   })
-  }
+}
 
-  return cache[key].data;
+return cache[key].data;
 }
 
 function parseWeather(weatherData) {
@@ -43,3 +44,5 @@ class Weather {
     this.date = day.datetime;
   }
 }
+
+module.exports = getWeather;
